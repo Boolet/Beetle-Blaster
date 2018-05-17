@@ -13,8 +13,9 @@ public class DebrisBall : MonoBehaviour {
 	[SerializeField] float volumePerDebris = 1.5f;
 	[SerializeField] float massPerDebris = 0.5f;
 
-	Rigidbody2D body;
-	CircleCollider2D attachedCollider;
+	public Rigidbody2D body;
+	public CircleCollider2D attachedCollider;
+	public ShipDebrisBallControl controller;
 
 	int m_debrisCount = 0;
 	public int DebrisCount{
@@ -23,18 +24,12 @@ public class DebrisBall : MonoBehaviour {
 			m_debrisCount = value;
 			UpdateBallSize();
 			UpdateBallMass();
+			controller.BallSizeChanged();	//inform the controller that the ball's size has changed
 		}
 	}
 	float m_debrisRadius = 0f;
 	public float DebrisRadius{
 		get{ return m_debrisRadius; }
-	}
-
-
-	// Use this for initialization
-	void Start () {
-		body = GetComponent<Rigidbody2D>();
-		attachedCollider = GetComponent<CircleCollider2D>();
 	}
 
 	/// <summary>
@@ -58,6 +53,9 @@ public class DebrisBall : MonoBehaviour {
 	public Debris[] SpawnDebrisFromBall(int count){
 		count = Mathf.Min(count, DebrisCount);
 		Debris[] output = new Debris[count];
+		if (count == 0)
+			return output;
+		DebrisCount -= count;
 
 		for (int i = 0; i < count; ++i){
 			output[i] = SpawnDebris();

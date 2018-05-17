@@ -15,7 +15,6 @@ public class DebugRotate : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		print("FixedUpdate");
 		if (Input.GetKey(KeyCode.W)){
 			body.AddTorque(degreesPerSecond * Time.fixedDeltaTime);
 		}

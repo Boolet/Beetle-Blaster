@@ -10,7 +10,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(DebrisOwnership))]
 public class Debris : MonoBehaviour {
-	public Collider2D collider;
+	public Collider2D attachedCollider;
 	public Rigidbody2D rigidBody2D;
 	public DebrisOwnership ownershipScript;
 }

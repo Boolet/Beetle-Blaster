@@ -8,7 +8,7 @@ using UnityEngine;
 public class ShipDebrisBallControl : MonoBehaviour {
 
 	[SerializeField] DebrisBall debrisBallPrefab;
-	[SerializeField] Transform debrisBallInitialPoint;
+	[SerializeField] Transform debrisBallNearEdgeLimit;	//this is how close the edge of the ball is supposed to be to the ship
 
 	DebrisBall spawnedBall;
 	SliderJoint2D controlJoint;	//will use a SliderJoint2D to keep the trash ball in front of the ship
@@ -17,7 +17,21 @@ public class ShipDebrisBallControl : MonoBehaviour {
 	void Start () {
 		//note: this will need to spawn for the server as well
 		spawnedBall = Instantiate(debrisBallPrefab);
-		spawnedBall.transform.position = debrisBallInitialPoint.position;
+		spawnedBall.transform.position = debrisBallNearEdgeLimit.position;
+
+		SetupJoint();	//the joint will need to be reflected on the server too
+	}
+
+	void SetupJoint(){
+		controlJoint = gameObject.AddComponent<SliderJoint2D>();
+		controlJoint.anchor = Vector2.zero;
+		controlJoint.autoConfigureAngle = false;
+		controlJoint.angle = 0;
+		controlJoint.autoConfigureConnectedAnchor = false;
+		controlJoint.useLimits = true;
+		controlJoint.connectedBody = spawnedBall.body;
+		controlJoint.connectedAnchor = Vector2.zero;
+		UpdateBallJointParameters();
 	}
 	
 	// Update is called once per frame
@@ -25,9 +39,31 @@ public class ShipDebrisBallControl : MonoBehaviour {
 		
 	}
 
-	/*
-	Vector2 BallPosition(){
-
+	/// <summary>
+	/// Called by the ball. This awkward flow is added to reduce how often the ball's position needs to be updated
+	/// </summary>
+	public void BallSizeChanged(){
+		UpdateBallJointParameters();
 	}
-	*/
+
+	/// <summary>
+	/// Changes the limits for the joint's max and min distance to resposition the ball
+	/// 
+	/// Will need to update the server
+	/// </summary>
+	void UpdateBallJointParameters(){
+		controlJoint.limits = MinMaxBallDistance();
+	}
+		
+	/// <summary>
+	/// Returns a translationlimits object that tries to keep the ball from ever being closer than debrisBallNearEdgeLimit distance
+	/// </summary>
+	/// <returns>The max ball distance.</returns>
+	JointTranslationLimits2D MinMaxBallDistance(){
+		JointTranslationLimits2D output = new JointTranslationLimits2D();
+		float absoluteMin = Vector2.Distance(transform.position, debrisBallNearEdgeLimit.position);
+		output.max = output.min = absoluteMin + spawnedBall.DebrisRadius;
+		return output;
+	}
+
 }
