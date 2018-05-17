@@ -11,6 +11,7 @@ public class ShipDebrisBallControl : MonoBehaviour {
 	[SerializeField] Transform debrisBallInitialPoint;
 
 	DebrisBall spawnedBall;
+	SliderJoint2D controlJoint;	//will use a SliderJoint2D to keep the trash ball in front of the ship
 
 	// Use this for initialization
 	void Start () {
