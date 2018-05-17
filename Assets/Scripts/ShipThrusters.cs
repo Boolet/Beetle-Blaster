@@ -14,6 +14,8 @@ public class ShipThrusters : MonoBehaviour {
 
 	/// <summary>
 	/// Call from a FixedUpdate control, passing in the input direction. The input will be normalized.
+	/// 
+	/// Will need to update the server
 	/// </summary>
 	/// <param name="direction">Direction.</param>
 	public void ThrustInDirection(Vector2 direction){

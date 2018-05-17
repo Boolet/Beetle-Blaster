@@ -12,10 +12,11 @@ public class DebrisBall : MonoBehaviour {
 	[SerializeField] Debris debrisPrefab;
 	[SerializeField] float volumePerDebris = 1.5f;
 	[SerializeField] float massPerDebris = 0.5f;
+	[SerializeField] float baseScaleFactor = 0.2f;
 
 	public Rigidbody2D body;
 	public CircleCollider2D attachedCollider;
-	public ShipDebrisBallControl controller;
+	[HideInInspector] public ShipDebrisBallControl controller;
 
 	int m_debrisCount = 0;
 	public int DebrisCount{
@@ -24,7 +25,8 @@ public class DebrisBall : MonoBehaviour {
 			m_debrisCount = value;
 			UpdateBallSize();
 			UpdateBallMass();
-			controller.BallSizeChanged();	//inform the controller that the ball's size has changed
+			if(controller != null)
+				controller.BallSizeChanged();	//inform the controller that the ball's size has changed
 		}
 	}
 	float m_debrisRadius = 0f;
@@ -94,7 +96,7 @@ public class DebrisBall : MonoBehaviour {
 	/// </summary>
 	void UpdateBallSize(){
 		m_debrisRadius = Mathf.Sqrt(volumePerDebris * DebrisCount / Mathf.PI);
-		transform.localScale = Vector3.one * m_debrisRadius;
+		transform.localScale = Vector3.one * m_debrisRadius * baseScaleFactor;
 		//update the server here
 	}
 
