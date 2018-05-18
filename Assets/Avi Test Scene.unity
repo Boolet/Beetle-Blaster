@@ -310,6 +310,8 @@ GameObject:
   - component: {fileID: 340893824}
   - component: {fileID: 340893823}
   - component: {fileID: 340893822}
+  - component: {fileID: 340893828}
+  - component: {fileID: 340893826}
   - component: {fileID: 340893821}
   m_Layer: 0
   m_Name: Ship
@@ -333,6 +335,7 @@ MonoBehaviour:
     type: 2}
   debrisBallNearEdgeLimit: {fileID: 2035435282}
   distanceTolerance: 0.1
+  spawnedBall: {fileID: 0}
 --- !u!114 &340893822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,6 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0491aaefc5d74d50b750c4fce340847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  power: 1
 --- !u!61 &340893824
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -401,6 +405,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &340893826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 340893820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73181e67edac24f80bb44c45119ce25d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballController: {fileID: 340893821}
+  chargeRate: 2
+  launchPower: 0.5
+  powerVariance: 0.1
+  spread: 0.05
 --- !u!4 &340893827
 Transform:
   m_ObjectHideFlags: 0
@@ -416,6 +436,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -179.434}
+--- !u!114 &340893828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 340893820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0c6ef8663f034290b56cfcee0780d55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shooter: {fileID: 340893826}
 --- !u!1001 &395357508
 Prefab:
   m_ObjectHideFlags: 0
@@ -1275,7 +1307,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2035435281}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalPosition: {x: 0.799, y: 0.002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 340893827}

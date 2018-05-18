@@ -5,7 +5,12 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - debrisPrefab: {fileID: 114662291372116430, guid: b49d6942088c547d7954b9cb89be4651,
+      type: 2}
+  - body: {instanceID: 0}
+  - attachedCollider: {instanceID: 0}
+  - controller: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

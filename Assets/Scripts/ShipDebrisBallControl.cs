@@ -11,11 +11,14 @@ public class ShipDebrisBallControl : MonoBehaviour {
 	[SerializeField] Transform debrisBallNearEdgeLimit;	//this is how close the edge of the ball is supposed to be to the ship
 	[SerializeField] float distanceTolerance = 0.1f;
 
-	DebrisBall spawnedBall;
+	[HideInInspector] public DebrisBall spawnedBall;
 	SliderJoint2D controlJoint;	//will use a SliderJoint2D to keep the trash ball in front of the ship
+	float ballNearEdgeDistance;
 
 	// Use this for initialization
 	void Start () {
+		ballNearEdgeDistance = Vector2.Distance(transform.position, debrisBallNearEdgeLimit.position);
+
 		//note: this will need to spawn for the server as well
 		spawnedBall = Instantiate(debrisBallPrefab);
 		spawnedBall.transform.position = debrisBallNearEdgeLimit.position;
@@ -34,11 +37,6 @@ public class ShipDebrisBallControl : MonoBehaviour {
 		controlJoint.connectedBody = spawnedBall.body;
 		controlJoint.connectedAnchor = Vector2.zero;
 		UpdateBallJointParameters();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	/// <summary>
@@ -63,8 +61,7 @@ public class ShipDebrisBallControl : MonoBehaviour {
 	/// <returns>The max ball distance.</returns>
 	JointTranslationLimits2D MinMaxBallDistance(){
 		JointTranslationLimits2D output = new JointTranslationLimits2D();
-		float absoluteMin = Vector2.Distance(transform.position, debrisBallNearEdgeLimit.position);
-		output.min = absoluteMin + spawnedBall.DebrisRadius;
+		output.min = ballNearEdgeDistance + spawnedBall.DebrisRadius;
 		output.max = output.min + distanceTolerance;
 		return output;
 	}

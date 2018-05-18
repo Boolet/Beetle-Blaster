@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class ShipThrusters : MonoBehaviour {
 
+	[SerializeField] float power = 1f;
+
 	Rigidbody2D body;
 
 	// Use this for initialization
@@ -19,6 +21,6 @@ public class ShipThrusters : MonoBehaviour {
 	/// </summary>
 	/// <param name="direction">Direction.</param>
 	public void ThrustInDirection(Vector2 direction){
-		body.AddForce(direction.normalized * Time.fixedDeltaTime);
+		body.AddForce(direction.normalized * Time.fixedDeltaTime * power);
 	}
 }

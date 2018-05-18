@@ -13,25 +13,60 @@ public class DebrisBall : MonoBehaviour {
 	[SerializeField] float volumePerDebris = 1.5f;
 	[SerializeField] float massPerDebris = 0.5f;
 	[SerializeField] float baseScaleFactor = 0.2f;
+	[SerializeField] float spawnedDebrisNoCollideTime = 0.5f;
 
 	public Rigidbody2D body;
 	public CircleCollider2D attachedCollider;
 	[HideInInspector] public ShipDebrisBallControl controller;
 
+	Dictionary<Collider2D, float> noCollideObjects = new Dictionary<Collider2D, float>();
+
 	int m_debrisCount = 0;
 	public int DebrisCount{
 		get{ return m_debrisCount; }
 		set{
+			if (value == m_debrisCount)
+				return;
 			m_debrisCount = value;
 			UpdateBallSize();
 			UpdateBallMass();
-			if(controller != null)
-				controller.BallSizeChanged();	//inform the controller that the ball's size has changed
+			SendBallUpdatedNotification();
 		}
 	}
 	float m_debrisRadius = 0f;
 	public float DebrisRadius{
-		get{ return m_debrisRadius; }
+		get{
+			float realCollisionRadius = attachedCollider.radius * transform.localScale.x;
+			return realCollisionRadius;
+		}
+	}
+
+	/// <summary>
+	/// Only using update to count down all of the nocollide timers
+	/// </summary>
+	void Update(){
+		TickDownNoCollide();
+	}
+
+	/// <summary>
+	/// counts down the timers associated with each of the objects that are not supposed to collide with this object
+	/// and, when any of them reach zero, enables collision and removes them from the dictionary
+	/// </summary>
+	void TickDownNoCollide(){
+
+		List<Collider2D> keyList = new List<Collider2D>();
+		foreach(Collider2D key in noCollideObjects.Keys){
+			keyList.Add(key);
+		}
+
+		foreach (Collider2D key in keyList){
+			noCollideObjects[key] -= Time.deltaTime;
+			if (noCollideObjects[key] <= 0){
+				Physics2D.IgnoreCollision(key, attachedCollider, false);
+				noCollideObjects.Remove(key);
+			}
+		}
+
 	}
 
 	/// <summary>
@@ -78,13 +113,18 @@ public class DebrisBall : MonoBehaviour {
 		newDebris.rigidBody2D.angularVelocity = body.angularVelocity;
 		newDebris.transform.position = RandomPointInBall();
 		//update server here
+
+		Physics2D.IgnoreCollision(attachedCollider, newDebris.attachedCollider);
+		noCollideObjects.Add(newDebris.attachedCollider, spawnedDebrisNoCollideTime);
+
 		return newDebris;
 	}
 
 	//returns a random point within the ball
 	Vector2 RandomPointInBall(){
 		Vector2 point = Random.insideUnitCircle;
-		point *= m_debrisRadius;
+		point *= DebrisRadius;
+		point += (Vector2)transform.position;
 		return point;
 	}
 
@@ -95,8 +135,8 @@ public class DebrisBall : MonoBehaviour {
 	/// Will need to update the server.
 	/// </summary>
 	void UpdateBallSize(){
-		m_debrisRadius = Mathf.Sqrt(volumePerDebris * DebrisCount / Mathf.PI);
-		transform.localScale = Vector3.one * m_debrisRadius * baseScaleFactor;
+		m_debrisRadius = Mathf.Sqrt(volumePerDebris * DebrisCount / Mathf.PI) * baseScaleFactor;
+		transform.localScale = Vector3.one * m_debrisRadius;
 		//update the server here
 	}
 
@@ -105,5 +145,11 @@ public class DebrisBall : MonoBehaviour {
 	/// </summary>
 	void UpdateBallMass(){
 		body.mass = DebrisCount * massPerDebris;
+	}
+
+	//inform the controller that the ball's size has changed
+	void SendBallUpdatedNotification(){
+		if(controller != null)
+			controller.BallSizeChanged();
 	}
 }

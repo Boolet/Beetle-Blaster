@@ -105,7 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debrisPrefab: {fileID: 114662291372116430, guid: b49d6942088c547d7954b9cb89be4651,
     type: 2}
-  volumePerDebris: 0.5
+  volumePerDebris: 1
   massPerDebris: 0.5
   baseScaleFactor: 0.2
   body: {fileID: 50474311313590236}
