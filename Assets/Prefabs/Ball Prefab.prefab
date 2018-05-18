@@ -59,7 +59,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: c3d8f656d40d444f782f3adb773f2ff7, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -72,7 +72,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 1386474884308974}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: c3d8f656d40d444f782f3adb773f2ff7, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -91,7 +91,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ball: {fileID: 114617977924718254}
-  velocityThreshold: 10
+  forceThreshold: 2
+  forcePerDebris: 0.7
+  knockOffImpulseFactor: 0.2
+  maxContactPoints: 4
 --- !u!114 &114617977924718254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -108,6 +111,7 @@ MonoBehaviour:
   volumePerDebris: 1
   massPerDebris: 0.5
   baseScaleFactor: 0.2
+  spawnedDebrisNoCollideTime: 0.5
   body: {fileID: 50474311313590236}
   attachedCollider: {fileID: 58959661732117810}
   controller: {fileID: 0}

@@ -15,23 +15,12 @@ public class DebrisBallCollisionControl : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D col){
 		//this doesn't handle the cases of the other body being kinematic, does it?
-		float greatestCollisionForce = 0f;
-		Vector2 contactNormal = Vector2.zero;
+		Vector2 strongestImpactNormal = PhysicsHelper.GreatestImpactNormal(col, maxContactPoints);
 
-		ContactPoint2D[] contacts = new ContactPoint2D[maxContactPoints];
-		col.GetContacts(contacts);
-		foreach (ContactPoint2D cp in contacts){
-			if (cp.normalImpulse > greatestCollisionForce){
-				greatestCollisionForce = cp.normalImpulse;
-				contactNormal = cp.normal;
-			}
-		}
-
-		if (greatestCollisionForce > forceThreshold){
-			BreakOffBall(greatestCollisionForce, contactNormal);
-			return;
+		if (strongestImpactNormal.magnitude > forceThreshold){
+			BreakOffBall(strongestImpactNormal.magnitude, strongestImpactNormal.normalized);
 		} else{
-			AddToBall(col.gameObject);
+			TryAddToBall(col.gameObject);
 		}
 	}
 
@@ -50,7 +39,7 @@ public class DebrisBallCollisionControl : MonoBehaviour {
 		}
 	}
 
-	void AddToBall(GameObject obj){
+	void TryAddToBall(GameObject obj){
 		Debris otherDebris = obj.GetComponent<Debris>();
 		if (otherDebris != null){
 

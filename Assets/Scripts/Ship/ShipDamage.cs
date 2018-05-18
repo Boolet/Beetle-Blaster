@@ -7,6 +7,7 @@ using UnityEngine;
 public class ShipDamage : MonoBehaviour {
 
 	[SerializeField] float forceDamageThreshold = 2f;
+	[SerializeField] int maxContactPoints = 4;
 
 	// Use this for initialization
 	void Start () {
@@ -19,10 +20,7 @@ public class ShipDamage : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D col){
-		float impactSpeed = col.relativeVelocity.magnitude;
-		float impactMass = col.rigidbody.mass;
-
-		if (impactMass * impactSpeed >= forceDamageThreshold){
+		if (PhysicsHelper.GreatestImpactNormal(col, maxContactPoints).magnitude >= forceDamageThreshold){
 			TakeDamage();
 		}
 	}
