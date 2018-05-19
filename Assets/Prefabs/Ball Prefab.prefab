@@ -55,7 +55,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
   debrisPrefab: {fileID: 114662291372116430, guid: b49d6942088c547d7954b9cb89be4651,
     type: 2}
   volumePerDebris: 1
-  massPerDebris: 0.5
+  massPerDebris: 0.02
   baseScaleFactor: 0.2
   spawnedDebrisNoCollideTime: 0.5
   body: {fileID: 50474311313590236}
