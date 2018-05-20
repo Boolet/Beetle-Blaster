@@ -10,14 +10,18 @@ public class ShipDebrisBallControl : MonoBehaviour {
 	[SerializeField] DebrisBall debrisBallPrefab;
 	[SerializeField] Transform debrisBallNearEdgeLimit;	//this is how close the edge of the ball is supposed to be to the ship
 	[SerializeField] float distanceTolerance = 0.1f;
+	[SerializeField] float distanceAdjustRate = 0.3f;
 
 	[HideInInspector] public DebrisBall spawnedBall;
-	SliderJoint2D controlJoint;	//will use a SliderJoint2D to keep the trash ball in front of the ship
+	HingeJoint2D controlJoint;
 	float ballNearEdgeDistance;
+	float targetDistance;
+	float currentDistance;
 
 	// Use this for initialization
 	void Start () {
 		ballNearEdgeDistance = Vector2.Distance(transform.position, debrisBallNearEdgeLimit.position);
+		currentDistance = targetDistance = ballNearEdgeDistance;
 
 		//note: this will need to spawn for the server as well
 		spawnedBall = Instantiate(debrisBallPrefab);
@@ -27,23 +31,24 @@ public class ShipDebrisBallControl : MonoBehaviour {
 		SetupJoint();	//the joint will need to be reflected on the server too
 	}
 
-	void SetupJoint(){
-		controlJoint = gameObject.AddComponent<SliderJoint2D>();
-		controlJoint.anchor = Vector2.zero;
-		controlJoint.autoConfigureAngle = false;
-		controlJoint.angle = 0;
-		controlJoint.autoConfigureConnectedAnchor = false;
-		controlJoint.useLimits = true;
-		controlJoint.connectedBody = spawnedBall.body;
-		controlJoint.connectedAnchor = Vector2.zero;
+	void FixedUpdate(){
+		currentDistance = Mathf.MoveTowards(currentDistance, targetDistance, Time.fixedDeltaTime * distanceAdjustRate);
 		UpdateBallJointParameters();
+	}
+
+	void SetupJoint(){
+		controlJoint = gameObject.AddComponent<HingeJoint2D>();
+		controlJoint.autoConfigureConnectedAnchor = false;
+		controlJoint.connectedBody = spawnedBall.body;
+		controlJoint.anchor = Vector2.right * currentDistance;
+		controlJoint.connectedAnchor = Vector2.zero;
 	}
 
 	/// <summary>
 	/// Called by the ball. This awkward flow is added to reduce how often the ball's position needs to be updated
 	/// </summary>
 	public void BallSizeChanged(){
-		UpdateBallJointParameters();
+		targetDistance = ballNearEdgeDistance + spawnedBall.DebrisRadius;
 	}
 
 	/// <summary>
@@ -52,18 +57,7 @@ public class ShipDebrisBallControl : MonoBehaviour {
 	/// Will need to update the server
 	/// </summary>
 	void UpdateBallJointParameters(){
-		controlJoint.limits = MinMaxBallDistance();
-	}
-		
-	/// <summary>
-	/// Returns a translationlimits object that tries to keep the ball from ever being closer than debrisBallNearEdgeLimit distance
-	/// </summary>
-	/// <returns>The max ball distance.</returns>
-	JointTranslationLimits2D MinMaxBallDistance(){
-		JointTranslationLimits2D output = new JointTranslationLimits2D();
-		output.min = ballNearEdgeDistance + spawnedBall.DebrisRadius;
-		output.max = output.min + distanceTolerance;
-		return output;
+		controlJoint.anchor = new Vector2(currentDistance, 0);
 	}
 
 }

@@ -20,6 +20,7 @@ public class DebrisBall : MonoBehaviour {
 	[HideInInspector] public ShipDebrisBallControl controller;
 
 	Dictionary<Collider2D, float> noCollideObjects = new Dictionary<Collider2D, float>();
+	//int debrisToAdd = 0;
 
 	int m_debrisCount = 0;
 	public int DebrisCount{
@@ -48,6 +49,12 @@ public class DebrisBall : MonoBehaviour {
 		TickDownNoCollide();
 	}
 
+	/*
+	void FixedUpdate(){
+		AddLeftoverDebris();
+	}
+	*/
+
 	/// <summary>
 	/// counts down the timers associated with each of the objects that are not supposed to collide with this object
 	/// and, when any of them reach zero, enables collision and removes them from the dictionary
@@ -68,6 +75,14 @@ public class DebrisBall : MonoBehaviour {
 		}
 
 	}
+
+	/*
+	//adds unadded debris to the ball
+	void AddLeftoverDebris(){
+		DebrisCount += debrisToAdd;
+		debrisToAdd = 0;
+	}
+	*/
 
 	/// <summary>
 	/// Adds another piece of debris to the ball

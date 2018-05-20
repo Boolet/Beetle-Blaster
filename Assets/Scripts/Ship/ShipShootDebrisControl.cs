@@ -16,9 +16,9 @@ public class ShipShootDebrisControl : MonoBehaviour {
 
 	[SerializeField] ShipDebrisBallControl ballController;
 	[SerializeField] float chargeRate = 2f;
-	[SerializeField] float launchPower = 0.5f;
-	[SerializeField] float powerVariance = 0.2f;
-	[SerializeField] float spread = 0.05f;
+	[SerializeField] float launchPower = 0.2f;
+	[SerializeField][Range(0f,1f)] float powerVariancePercent = 0.10f;
+	[SerializeField][Range(0f,90f)] float spread = 5f;
 
 	bool charging = false;
 	float chargeLevel = 0f;
@@ -41,9 +41,9 @@ public class ShipShootDebrisControl : MonoBehaviour {
 		Debris[] firedProjectiles = ballController.spawnedBall.SpawnDebrisFromBall(projectileCount);
 		foreach (Debris d in firedProjectiles){
 			float thisSpread = Random.Range(-spread, spread);
-			float thisPower = Random.Range(-powerVariance, powerVariance) + launchPower;
-			Vector2 forceVector = transform.right * launchPower + transform.up * thisSpread;
-			forceVector = forceVector.normalized * thisPower;
+			float thisPower = launchPower * Random.Range(-powerVariancePercent, powerVariancePercent) + launchPower;
+			Vector2 forceVector = transform.right * thisPower;
+			forceVector = Quaternion.AngleAxis(thisSpread, transform.forward) * forceVector;
 
 			d.rigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
 		}
