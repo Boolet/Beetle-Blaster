@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class ShipThrusters : MonoBehaviour {
+public class ShipThrusters : NetworkBehaviour {
 
 	[SerializeField] float power = 1f;
 
@@ -21,6 +22,18 @@ public class ShipThrusters : MonoBehaviour {
 	/// </summary>
 	/// <param name="direction">Direction.</param>
 	public void ThrustInDirection(Vector2 direction){
+		if (isLocalPlayer)
+			CmdThrust(direction);
+	}
+
+	[Command]
+	void CmdThrust(Vector2 direction){
+		body.AddForce(direction.normalized * Time.fixedDeltaTime * power);
+		RpcThrust(direction);
+	}
+
+	[ClientRpc]
+	void RpcThrust(Vector2 direction){
 		body.AddForce(direction.normalized * Time.fixedDeltaTime * power);
 	}
 }
