@@ -49,6 +49,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1750036219783994
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4810079333935328}
+  - component: {fileID: 58241595542392788}
+  - component: {fileID: 114571750246338058}
+  m_Layer: 8
+  m_Name: No Ball Gather Area
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1952099473528118
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +104,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.317, y: 0.007, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4810079333935328}
   m_Father: {fileID: 4746048784591752}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -106,6 +124,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -179.434}
+--- !u!4 &4810079333935328
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1750036219783994}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4060608349060590}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &50549149287634858
 Rigidbody2D:
   serializedVersion: 4
@@ -126,6 +157,21 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &58241595542392788
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1750036219783994}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.25
 --- !u!61 &61990921872065076
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -188,6 +234,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forceDamageThreshold: 2
   maxContactPoints: 4
+--- !u!114 &114571750246338058
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1750036219783994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f757cf8eb905c4716a1d153869f6b865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shipBallController: {fileID: 114937067316756776}
 --- !u!114 &114574810835705702
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -230,8 +288,9 @@ MonoBehaviour:
   debrisBallPrefab: {fileID: 114617977924718254, guid: 681a534d1b5e34a298dda2be3255eabb,
     type: 2}
   debrisBallNearEdgeLimit: {fileID: 4060608349060590}
+  gatherArea: {fileID: 114571750246338058}
   distanceTolerance: 0.1
-  distanceAdjustRate: 0.1
+  distanceAdjustRate: 0.3
   spawnedBall: {fileID: 0}
 --- !u!212 &212392678052044420
 SpriteRenderer:
