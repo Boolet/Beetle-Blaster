@@ -7,12 +7,10 @@ using UnityEngine;
 /// </summary>
 public class DebrisOwnership : MonoBehaviour {
 
-    //PlayerDebrisOwner lastOwner = null;
-    GameObject lastOwner = null;
-    public float TurnInSpeed = 1.0f;
+	PlayerDebrisOwner lastOwner = null;
 
-    // Use this for initialization
-    void Start () {
+	// Use this for initialization
+	void Start () {
 		
 	}
 	
@@ -21,28 +19,7 @@ public class DebrisOwnership : MonoBehaviour {
 		
 	}
 
-	//public void SetDebrisOwner(PlayerDebrisOwner newOwner){
-	//	lastOwner = newOwner;
-	//}
-
-    public void SetDebrisOwner(GameObject newOwner)
-    {
-        lastOwner = newOwner;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        //Collision with Turn in Portal
-        if (collision.gameObject.tag == "Goal")
-        {
-            SetDebrisOwner(this.gameObject);
-            if(lastOwner != null)
-            {
-                if (this.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude > TurnInSpeed)
-                {
-                    Destroy(this.gameObject);
-                }
-            }
-        }
-    }
+	public void SetDebrisOwner(PlayerDebrisOwner newOwner){
+		lastOwner = newOwner;
+	}
 }
