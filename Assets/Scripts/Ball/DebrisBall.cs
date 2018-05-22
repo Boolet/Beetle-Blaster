@@ -95,6 +95,7 @@ public class DebrisBall : NetworkBehaviour {
 	/// <param name="debris">Debris.</param>
 	[Server]
 	public void CollapseDebrisToBall(Debris debris){
+		NetworkServer.UnSpawn(debris.gameObject);
 		Destroy(debris.gameObject);
 		++DebrisCount;
 	}
@@ -128,6 +129,7 @@ public class DebrisBall : NetworkBehaviour {
 	/// Will need to update the server.
 	/// </summary>
 	/// <returns>The debris.</returns>
+	[Server]
 	Debris SpawnDebris(){
 		Debris newDebris = Instantiate(debrisPrefab);
 		newDebris.rigidBody2D.velocity = body.velocity;

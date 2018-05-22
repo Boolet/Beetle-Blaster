@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 114937067316756776}
   - component: {fileID: 114048510700891388}
   - component: {fileID: 114087607264902416}
+  - component: {fileID: 114110736351919644}
   - component: {fileID: 114492074434693854}
   - component: {fileID: 114566039534718690}
   - component: {fileID: 114404442675978430}
@@ -238,6 +239,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipThrusters: {fileID: 114386909264856546}
+--- !u!114 &114110736351919644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1708681558183080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c58f24faeb80eed4ab5c9f84f9caffa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114386909264856546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -409,7 +421,6 @@ MonoBehaviour:
     type: 2}
   debrisBallNearEdgeLimit: {fileID: 4060608349060590}
   gatherArea: {fileID: 114571750246338058}
-  distanceTolerance: 0.1
   distanceAdjustRate: 0.3
   spawnedBall: {fileID: 0}
 --- !u!114 &114966322958224270
