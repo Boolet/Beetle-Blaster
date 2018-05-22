@@ -10,7 +10,7 @@ public class ShipDebrisBallControl : MonoBehaviour {
 	[SerializeField] DebrisBall debrisBallPrefab;
 	[SerializeField] Transform debrisBallNearEdgeLimit;	//this is how close the edge of the ball is supposed to be to the ship
 	[SerializeField] ShipGatherArea gatherArea;
-	[SerializeField] float distanceTolerance = 0.1f;
+	//[SerializeField] float distanceTolerance = 0.1f;
 	[SerializeField] float distanceAdjustRate = 0.3f;
 
 	[HideInInspector] public DebrisBall spawnedBall;
