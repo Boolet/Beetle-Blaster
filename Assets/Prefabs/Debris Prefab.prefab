@@ -115,12 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e00d0921c0749f5a604d8a9e039c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
   TurnInSpeed: 1
-=======
-  scoreboard: {fileID: 0}
-  TurnInSpeed: 10
->>>>>>> c10830ee2be85343df725c100b14284f8afc9c20
 --- !u!114 &114662291372116430
 MonoBehaviour:
   m_ObjectHideFlags: 1

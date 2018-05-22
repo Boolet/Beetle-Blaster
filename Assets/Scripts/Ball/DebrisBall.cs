@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 /// <summary>
 /// This is attached to the debris ball in front of the player's ship
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
-public class DebrisBall : NetworkBehaviour {
+public class DebrisBall : MonoBehaviour {
 
 	[SerializeField] Debris debrisPrefab;
 	[SerializeField] float volumePerDebris = 1.5f;
@@ -27,12 +26,12 @@ public class DebrisBall : NetworkBehaviour {
 	public int DebrisCount{
 		get{ return m_debrisCount; }
 		set{
-			//if (value == m_debrisCount)
-				//return;
+			if (value == m_debrisCount)
+				return;
 			m_debrisCount = value;
-			RpcUpdateBallSize();
-			RpcUpdateBallMass();
-			RpcSendBallUpdatedNotification();
+			UpdateBallSize();
+			UpdateBallMass();
+			SendBallUpdatedNotification();
 		}
 	}
 	float m_debrisRadius = 0f;
@@ -41,10 +40,6 @@ public class DebrisBall : NetworkBehaviour {
 			float realCollisionRadius = attachedCollider.radius * transform.localScale.x;
 			return realCollisionRadius;
 		}
-	}
-
-	void Start(){
-		DebrisCount = 0;
 	}
 
 	/// <summary>
@@ -93,7 +88,6 @@ public class DebrisBall : NetworkBehaviour {
 	/// Adds another piece of debris to the ball
 	/// </summary>
 	/// <param name="debris">Debris.</param>
-	[Server]
 	public void CollapseDebrisToBall(Debris debris){
 		Destroy(debris.gameObject);
 		++DebrisCount;
@@ -133,10 +127,10 @@ public class DebrisBall : NetworkBehaviour {
 		newDebris.rigidBody2D.velocity = body.velocity;
 		newDebris.rigidBody2D.angularVelocity = body.angularVelocity;
 		newDebris.transform.position = RandomPointInBall();
+		//update server here
 
 		Physics2D.IgnoreCollision(attachedCollider, newDebris.attachedCollider);
 		noCollideObjects.Add(newDebris.attachedCollider, spawnedDebrisNoCollideTime);
-		NetworkServer.Spawn(newDebris.gameObject);
 
 		return newDebris;
 	}
@@ -155,8 +149,7 @@ public class DebrisBall : NetworkBehaviour {
 	/// 
 	/// Will need to update the server.
 	/// </summary>
-	//[ClientRpc]
-	void RpcUpdateBallSize(){
+	void UpdateBallSize(){
 		m_debrisRadius = Mathf.Sqrt(volumePerDebris * DebrisCount / Mathf.PI) * baseScaleFactor;
 		transform.localScale = Vector3.one * m_debrisRadius;
 		//update the server here
@@ -165,14 +158,12 @@ public class DebrisBall : NetworkBehaviour {
 	/// <summary>
 	/// Just changes the mass to refelect the amount of debris in it, using massPerDebris.
 	/// </summary>
-	//[ClientRpc]
-	void RpcUpdateBallMass(){
+	void UpdateBallMass(){
 		body.mass = DebrisCount * massPerDebris;
 	}
 
 	//inform the controller that the ball's size has changed
-	//[ClientRpc]
-	void RpcSendBallUpdatedNotification(){
+	void SendBallUpdatedNotification(){
 		if(controller != null)
 			controller.BallSizeChanged();
 	}

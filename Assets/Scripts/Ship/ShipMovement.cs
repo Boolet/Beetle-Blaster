@@ -5,12 +5,11 @@ using UnityEngine;
 public class ShipMovement : MonoBehaviour {
 
     public ShipThrusters shipThrusters;
-    // Use this for initialization
-    Rigidbody2D body;
-    void Start ()
+	// Use this for initialization
+	void Start ()
     {
-        body = GetComponent<Rigidbody2D>();
-    }
+		
+	}
 	
 	// Update is called once per frame
 	void FixedUpdate ()

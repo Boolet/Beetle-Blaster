@@ -4,11 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-<<<<<<< HEAD
   - Fire
   - Debris
-=======
->>>>>>> c10830ee2be85343df725c100b14284f8afc9c20
   - Goal
   layers:
   - Default
