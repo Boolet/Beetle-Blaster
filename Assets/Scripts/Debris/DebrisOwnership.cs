@@ -8,11 +8,22 @@ using UnityEngine;
 public class DebrisOwnership : MonoBehaviour {
 
     //PlayerDebrisOwner lastOwner = null;
+<<<<<<< HEAD
     GameObject lastOwner = null;
     public float TurnInSpeed = 1.0f;
 
     // Use this for initialization
     void Start () {
+=======
+    string lastOwner = null;
+    public GameObject scoreboard;
+    public float TurnInSpeed = 1.0f;
+
+	// Use this for initialization
+	void Start () {
+        //Testing purposes only, remove this line later
+        SetDebrisOwner("Player1");
+>>>>>>> c10830ee2be85343df725c100b14284f8afc9c20
 		
 	}
 	
@@ -21,6 +32,7 @@ public class DebrisOwnership : MonoBehaviour {
 		
 	}
 
+<<<<<<< HEAD
 	//public void SetDebrisOwner(PlayerDebrisOwner newOwner){
 	//	lastOwner = newOwner;
 	//}
@@ -40,6 +52,22 @@ public class DebrisOwnership : MonoBehaviour {
             {
                 if (this.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude > TurnInSpeed)
                 {
+=======
+	public void SetDebrisOwner(string newOwner){
+		lastOwner = newOwner;
+	}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Goal")
+        {
+            if(lastOwner != null)
+            {
+                if(this.GetComponent<Rigidbody2D>().velocity.magnitude < TurnInSpeed)
+                {
+                    scoreboard = GameObject.Find("Canvas/ScoreBoard");
+                    scoreboard.GetComponent<ScoreBoard>().updateScore(lastOwner, 1);
+>>>>>>> c10830ee2be85343df725c100b14284f8afc9c20
                     Destroy(this.gameObject);
                 }
             }
