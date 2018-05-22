@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class ShipRotation : MonoBehaviour {
+public class ShipRotation : NetworkBehaviour {
 
+	float torqueDamping = 0.001f;
     Rigidbody2D body;
-    Vector3 playerDir;
-    Vector3 mouseDir;
-    Vector3 mouseInput;
+    Vector2 playerDir;
+    Vector2 mouseDir;
     bool isTurning;
     // Use this for initialization
     float _angle;
@@ -22,9 +23,14 @@ public class ShipRotation : MonoBehaviour {
 	
 	void FixedUpdate ()
     {
+		//print(mouseDir);
+
+		RotationSystem();
+
+		/*
         if(!isTurning && !CheckSameDirection())
         {
-            AddTorque(Vector2.SignedAngle(mouseDir, playerDir));
+            AddTorque();
             isTurning = true;
         }
         //======================================================================
@@ -33,27 +39,43 @@ public class ShipRotation : MonoBehaviour {
         //Debug.Log("Mouse:" + mouseDir.normalized + "   Player: " + playerDir.normalized);
         //Debug.Log(Vector3.SqrMagnitude(mouseDir.normalized - playerDir.normalized));
         //======================================================================
-        GetDirections();
+        */
+        //GetDirections();
+        
 
     }
-    void AddTorque(float angle)
+
+	void RotationSystem(){
+		GetDirections();
+		AddTorque();
+		CriticalApproach();
+
+	}
+
+
+	float AddTorque()
     {
         Vector3 x = Vector3.Cross(playerDir.normalized, mouseDir.normalized);
-        float theta = Mathf.Asin(x.magnitude);
-        Vector3 w = x.normalized * theta / Time.fixedDeltaTime;
-        float alpha = w.z;
-        float T = body.inertia * w.z;
-        //T = T/10;
+		float T = -x.magnitude * Time.fixedDeltaTime * Mathf.Sign(x.z);
         body.AddTorque(T, ForceMode2D.Impulse);
+		return T;
     }
+
+	void CriticalApproach(){
+		float dampingConstant = 2 * Mathf.Sqrt(body.inertia / 90);
+
+
+		body.AddTorque(-body.angularVelocity * dampingConstant * Time.fixedDeltaTime, ForceMode2D.Force);
+
+		// f/m = w^2, y = c/2m : sqrt(f/m) = y = c/2m ; sqrt(f/m)/2m = c
+	}
 
     void GetDirections()
     {
-        mouseInput = Input.mousePosition - body.transform.position;
-        mousePosition = Camera.main.ScreenToWorldPoint(mouseInput);
-        mouseDir = mousePosition - body.transform.position;
-        mouseDir.z = 0;
-        playerDir = body.transform.right;
+        //mouseInput = Input.mousePosition - body.transform.position;
+		mouseDir = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		mouseDir = mouseDir - (Vector2)body.transform.position;
+        playerDir = -body.transform.right;
         if(isTurning && CheckSameDirection())
         {
             body.freezeRotation = true;
@@ -61,6 +83,7 @@ public class ShipRotation : MonoBehaviour {
             body.freezeRotation = false;
         }
     }
+
     bool CheckSameDirection()
     {
         if (Vector3.SqrMagnitude(mouseDir.normalized - playerDir.normalized) < 0.01)
