@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 50474311313590236}
   - component: {fileID: 114617977924718254}
   - component: {fileID: 114297926184926004}
+  - component: {fileID: 114581849062838212}
   m_Layer: 0
   m_Name: Ball Prefab
   m_TagString: Untagged
@@ -95,6 +96,38 @@ MonoBehaviour:
   forcePerDebris: 0.7
   knockOffImpulseFactor: 0.2
   maxContactPoints: 4
+--- !u!114 &114581849062838212
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1386474884308974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 104
+    i1: 26
+    i2: 83
+    i3: 77
+    i4: 27
+    i5: 94
+    i6: 52
+    i7: 162
+    i8: 152
+    i9: 221
+    i10: 162
+    i11: 190
+    i12: 50
+    i13: 85
+    i14: 234
+    i15: 187
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114617977924718254
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -115,6 +148,7 @@ MonoBehaviour:
   body: {fileID: 50474311313590236}
   attachedCollider: {fileID: 58959661732117810}
   controller: {fileID: 0}
+  scoreboard: {fileID: 0}
 --- !u!212 &212085177479157560
 SpriteRenderer:
   m_ObjectHideFlags: 1
