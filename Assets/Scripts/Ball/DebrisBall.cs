@@ -21,19 +21,21 @@ public class DebrisBall : NetworkBehaviour {
 	[HideInInspector] public ShipDebrisBallControl controller;
 
 	Dictionary<Collider2D, float> noCollideObjects = new Dictionary<Collider2D, float>();
-	//int debrisToAdd = 0;
+    //int debrisToAdd = 0;
+
+    string lastOwner = null;
+    public GameObject scoreboard;
 
 	int m_debrisCount = 0;
 	public int DebrisCount{
 		get{ return m_debrisCount; }
-		private set{
+		set{
 			//if (value == m_debrisCount)
 				//return;
 			m_debrisCount = value;
-			if (isClient)
-				UpdateBall();
-			else
-				RpcUpdateBall();
+			RpcUpdateBallSize();
+			RpcUpdateBallMass();
+			RpcSendBallUpdatedNotification();
 		}
 	}
 	float m_debrisRadius = 0f;
@@ -66,7 +68,7 @@ public class DebrisBall : NetworkBehaviour {
 	/// and, when any of them reach zero, enables collision and removes them from the dictionary
 	/// </summary>
 	void TickDownNoCollide(){
-		//may need to add networking
+
 		List<Collider2D> keyList = new List<Collider2D>();
 		foreach(Collider2D key in noCollideObjects.Keys){
 			keyList.Add(key);
@@ -152,30 +154,14 @@ public class DebrisBall : NetworkBehaviour {
 		return point;
 	}
 
-	[Command]
-	void CmdUpdateBall(){
-		UpdateBall();
-		RpcUpdateBall();
-	}
-
-	[ClientRpc]
-	void RpcUpdateBall(){
-		UpdateBall();
-	}
-
-	void UpdateBall(){
-		UpdateBallSize();
-		UpdateBallMass();
-		SendBallUpdatedNotification();
-	}
-
 	/// <summary>
 	/// Changes the size of the ball to reflect the amount of debris in it, taking into consideration the volumePerDebris
 	/// and the area of a circle.
 	/// 
 	/// Will need to update the server.
 	/// </summary>
-	void UpdateBallSize(){
+	//[ClientRpc]
+	void RpcUpdateBallSize(){
 		m_debrisRadius = Mathf.Sqrt(volumePerDebris * DebrisCount / Mathf.PI) * baseScaleFactor;
 		transform.localScale = Vector3.one * m_debrisRadius;
 		//update the server here
@@ -184,13 +170,32 @@ public class DebrisBall : NetworkBehaviour {
 	/// <summary>
 	/// Just changes the mass to refelect the amount of debris in it, using massPerDebris.
 	/// </summary>
-	void UpdateBallMass(){
+	//[ClientRpc]
+	void RpcUpdateBallMass(){
 		body.mass = DebrisCount * massPerDebris;
 	}
 
 	//inform the controller that the ball's size has changed
-	void SendBallUpdatedNotification(){
+	//[ClientRpc]
+	void RpcSendBallUpdatedNotification(){
 		if(controller != null)
 			controller.BallSizeChanged();
 	}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Goal")
+        {
+            //test line only
+            lastOwner = "Player1";
+            if (lastOwner != null)
+            {
+
+                scoreboard = GameObject.Find("Canvas/ScoreBoard");
+                scoreboard.GetComponent<ScoreBoard>().updateScore(lastOwner, DebrisCount);
+                DebrisCount = 0;
+                //Destroy(this.gameObject);
+            }
+        }
+    }
 }
