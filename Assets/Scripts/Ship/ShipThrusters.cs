@@ -28,7 +28,7 @@ public class ShipThrusters : NetworkBehaviour {
 
 	[Command]
 	void CmdThrust(Vector2 direction){
-		body.AddForce(direction.normalized * Time.fixedDeltaTime * power);
+		//body.AddForce(direction.normalized * Time.fixedDeltaTime * power);
 		RpcThrust(direction);
 	}
 

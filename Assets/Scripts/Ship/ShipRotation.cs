@@ -16,6 +16,8 @@ public class ShipRotation : NetworkBehaviour {
 
     void Start ()
     {
+		if (!isLocalPlayer)
+			return;
         body = GetComponent<Rigidbody2D>();
         GetDirections();
         isTurning = false;
@@ -23,6 +25,8 @@ public class ShipRotation : NetworkBehaviour {
 	
 	void FixedUpdate ()
     {
+		if (!isLocalPlayer)
+			return;
 		//print(mouseDir);
 
 		RotationSystem();
@@ -53,22 +57,34 @@ public class ShipRotation : NetworkBehaviour {
 	}
 
 
-	float AddTorque()
+	void AddTorque()
     {
         Vector3 x = Vector3.Cross(playerDir.normalized, mouseDir.normalized);
 		float T = -x.magnitude * Time.fixedDeltaTime * Mathf.Sign(x.z);
-        body.AddTorque(T, ForceMode2D.Impulse);
-		return T;
+		body.AddTorque(T, ForceMode2D.Impulse);
+		//CmdAddTorque(T, ForceMode2D.Impulse);
     }
+
+	[Command]
+	void CmdAddTorque(float torque, ForceMode2D mode){
+		//body.AddTorque(torque, mode);
+		RpcAddTorque(torque, mode);
+	}
+
+	[ClientRpc]
+	void RpcAddTorque(float torque, ForceMode2D mode){
+		body.AddTorque(torque, mode);
+	}
 
 	void CriticalApproach(){
 		float dampingConstant = 2 * Mathf.Sqrt(body.inertia / 90);
-
-
-		body.AddTorque(-body.angularVelocity * dampingConstant * Time.fixedDeltaTime, ForceMode2D.Force);
+		float torque = -body.angularVelocity * dampingConstant * Time.fixedDeltaTime;
+		body.AddTorque(torque, ForceMode2D.Force);
+		//CmdAddTorque(torque, ForceMode2D.Force);
 
 		// f/m = w^2, y = c/2m : sqrt(f/m) = y = c/2m ; sqrt(f/m)/2m = c
 	}
+
 
     void GetDirections()
     {

@@ -30,8 +30,8 @@ public class DebrisBall : NetworkBehaviour {
 			//if (value == m_debrisCount)
 				//return;
 			m_debrisCount = value;
-			if (isClient)
-				UpdateBall();
+			if (isLocalPlayer)
+				CmdUpdateBall();
 			else
 				RpcUpdateBall();
 		}
