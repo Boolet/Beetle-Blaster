@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 114595696615650114}
   - component: {fileID: 114688418957513230}
   - component: {fileID: 114187331306026348}
+  - component: {fileID: 114964163898478944}
   m_Layer: 8
   m_Name: Network Ship
   m_TagString: Untagged
@@ -419,6 +420,17 @@ MonoBehaviour:
   gatherArea: {fileID: 114100729696943974}
   distanceAdjustRate: 0.3
   spawnedBall: {fileID: 0}
+--- !u!114 &114964163898478944
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1879704095921998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c58f24faeb80eed4ab5c9f84f9caffa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114983680445389948
 MonoBehaviour:
   m_ObjectHideFlags: 1
