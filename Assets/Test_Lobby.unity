@@ -310,7 +310,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11402578, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
       propertyPath: m_Text
-      value: Bettle-Blaster
+      value: Extreme Space Garbagemen
       objectReference: {fileID: 0}
     - target: {fileID: 22466426, guid: c0978251ff7b10d4fb954a4b56acd9f0, type: 2}
       propertyPath: m_AnchoredPosition.x
