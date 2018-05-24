@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using UnityEngine;
 
 /// <summary>
 /// This attaches to the ship
 /// </summary>
-public class ShipDebrisBallControl : MonoBehaviour {
+public class ShipDebrisBallControl : NetworkBehaviour {
 
 	[SerializeField] DebrisBall debrisBallPrefab;
 	[SerializeField] Transform debrisBallNearEdgeLimit;	//this is how close the edge of the ball is supposed to be to the ship
@@ -28,6 +29,9 @@ public class ShipDebrisBallControl : MonoBehaviour {
 		spawnedBall = Instantiate(debrisBallPrefab);
 		spawnedBall.transform.position = debrisBallNearEdgeLimit.position;
 		spawnedBall.controller = this;
+
+		NetworkServer.Spawn(spawnedBall.gameObject);
+
 
 		SetupJoint();	//the joint will need to be reflected on the server too
 	}

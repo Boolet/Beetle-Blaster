@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Allows the player to shoot off debris from their ball as projectiles.
@@ -12,7 +13,7 @@ using UnityEngine;
 /// And is there recoil?
 /// </summary>
 [RequireComponent(typeof(ShipDebrisBallControl))]
-public class ShipShootDebrisControl : MonoBehaviour {
+public class ShipShootDebrisControl : NetworkBehaviour {
 
 	[SerializeField] ShipDebrisBallControl ballController;
 	[SerializeField] float chargeRate = 2f;
@@ -37,7 +38,14 @@ public class ShipShootDebrisControl : MonoBehaviour {
 	public void Fire(){
 		charging = false;
 		int projectileCount = Mathf.FloorToInt(chargeLevel);
+		chargeLevel -= projectileCount;
 
+		CmdFire(projectileCount);
+
+	}
+
+	[Command]
+	void CmdFire(int projectileCount){
 		Debris[] firedProjectiles = ballController.spawnedBall.SpawnDebrisFromBall(projectileCount);
 		foreach (Debris d in firedProjectiles){
 			float thisSpread = Random.Range(-spread, spread);
@@ -47,8 +55,5 @@ public class ShipShootDebrisControl : MonoBehaviour {
 
 			d.rigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
 		}
-
-		chargeLevel -= projectileCount;
-
 	}
 }

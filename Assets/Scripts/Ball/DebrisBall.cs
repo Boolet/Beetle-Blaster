@@ -26,13 +26,14 @@ public class DebrisBall : NetworkBehaviour {
 	int m_debrisCount = 0;
 	public int DebrisCount{
 		get{ return m_debrisCount; }
-		set{
+		private set{
 			//if (value == m_debrisCount)
 				//return;
 			m_debrisCount = value;
-			RpcUpdateBallSize();
-			RpcUpdateBallMass();
-			RpcSendBallUpdatedNotification();
+			if (isClient)
+				UpdateBall();
+			else
+				RpcUpdateBall();
 		}
 	}
 	float m_debrisRadius = 0f;
@@ -65,7 +66,7 @@ public class DebrisBall : NetworkBehaviour {
 	/// and, when any of them reach zero, enables collision and removes them from the dictionary
 	/// </summary>
 	void TickDownNoCollide(){
-
+		//may need to add networking
 		List<Collider2D> keyList = new List<Collider2D>();
 		foreach(Collider2D key in noCollideObjects.Keys){
 			keyList.Add(key);
@@ -151,14 +152,30 @@ public class DebrisBall : NetworkBehaviour {
 		return point;
 	}
 
+	[Command]
+	void CmdUpdateBall(){
+		UpdateBall();
+		RpcUpdateBall();
+	}
+
+	[ClientRpc]
+	void RpcUpdateBall(){
+		UpdateBall();
+	}
+
+	void UpdateBall(){
+		UpdateBallSize();
+		UpdateBallMass();
+		SendBallUpdatedNotification();
+	}
+
 	/// <summary>
 	/// Changes the size of the ball to reflect the amount of debris in it, taking into consideration the volumePerDebris
 	/// and the area of a circle.
 	/// 
 	/// Will need to update the server.
 	/// </summary>
-	//[ClientRpc]
-	void RpcUpdateBallSize(){
+	void UpdateBallSize(){
 		m_debrisRadius = Mathf.Sqrt(volumePerDebris * DebrisCount / Mathf.PI) * baseScaleFactor;
 		transform.localScale = Vector3.one * m_debrisRadius;
 		//update the server here
@@ -167,14 +184,12 @@ public class DebrisBall : NetworkBehaviour {
 	/// <summary>
 	/// Just changes the mass to refelect the amount of debris in it, using massPerDebris.
 	/// </summary>
-	//[ClientRpc]
-	void RpcUpdateBallMass(){
+	void UpdateBallMass(){
 		body.mass = DebrisCount * massPerDebris;
 	}
 
 	//inform the controller that the ball's size has changed
-	//[ClientRpc]
-	void RpcSendBallUpdatedNotification(){
+	void SendBallUpdatedNotification(){
 		if(controller != null)
 			controller.BallSizeChanged();
 	}
