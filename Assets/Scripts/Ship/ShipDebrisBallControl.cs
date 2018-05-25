@@ -22,6 +22,9 @@ public class ShipDebrisBallControl : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if (!isLocalPlayer)
+			return;
+
 		ballNearEdgeDistance = Vector2.Distance(transform.position, debrisBallNearEdgeLimit.position);
 		currentDistance = targetDistance = ballNearEdgeDistance;
 
@@ -33,10 +36,12 @@ public class ShipDebrisBallControl : NetworkBehaviour {
 		spawnedBall.controller = this;
 
 
-		//SetupJoint();	//the joint will need to be reflected on the server too
+		SetupJoint();	//the joint will need to be reflected on the server too
 	}
 
 	void FixedUpdate(){
+		if (!isLocalPlayer)
+			return;
 		currentDistance = Mathf.MoveTowards(currentDistance, targetDistance, Time.fixedDeltaTime * distanceAdjustRate);
 		UpdateBallJointParameters();
 	}
@@ -56,7 +61,7 @@ public class ShipDebrisBallControl : NetworkBehaviour {
 		spawnedBall.transform.position = debrisBallNearEdgeLimit.position;
 		spawnedBall.controller = this;
 
-		SetupJoint();
+		//SetupJoint();
 
 		return spawnedBall;
 	}
