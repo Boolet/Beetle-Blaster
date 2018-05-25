@@ -31,17 +31,15 @@ public class ShipDebrisBallControl : NetworkBehaviour {
 		//note: this will need to spawn for the server as well
 
 		//spawnedBall = Instantiate(debrisBallPrefab);
-		spawnedBall = CmdSpawnBall();
-		spawnedBall.transform.position = debrisBallNearEdgeLimit.position;
-		spawnedBall.controller = this;
+		//spawnedBall = Instantiate(debrisBallPrefab);
+		//spawnedBall.transform.position = debrisBallNearEdgeLimit.position;
+		//spawnedBall.controller = this;
+		CmdSpawnBall();
 
-
-		SetupJoint();	//the joint will need to be reflected on the server too
+		//SetupJoint();	//the joint will need to be reflected on the server too
 	}
 
 	void FixedUpdate(){
-		if (!isLocalPlayer)
-			return;
 		currentDistance = Mathf.MoveTowards(currentDistance, targetDistance, Time.fixedDeltaTime * distanceAdjustRate);
 		UpdateBallJointParameters();
 	}
@@ -55,15 +53,13 @@ public class ShipDebrisBallControl : NetworkBehaviour {
 	}
 
 	[Command]
-	DebrisBall CmdSpawnBall(){
+	void CmdSpawnBall(){
 		spawnedBall = Instantiate(debrisBallPrefab);
 		NetworkServer.Spawn(spawnedBall.gameObject);
 		spawnedBall.transform.position = debrisBallNearEdgeLimit.position;
 		spawnedBall.controller = this;
 
-		//SetupJoint();
-
-		return spawnedBall;
+		SetupJoint();
 	}
 
 	[ClientRpc]
