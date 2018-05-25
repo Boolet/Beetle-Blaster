@@ -252,7 +252,8 @@ MonoBehaviour:
   m_PlayerSpawnMethod: 0
   m_OfflineScene: Network Test
   m_OnlineScene: Avi Test Scene
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 1386474884308974, guid: 681a534d1b5e34a298dda2be3255eabb, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
